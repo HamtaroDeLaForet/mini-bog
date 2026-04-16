@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
@@ -20,8 +22,8 @@ class Category
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Category')]
-    private ?Post $post = null;
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'category')]
+    private Collection $post;
 
     public function getId(): ?int
     {
@@ -52,15 +54,31 @@ class Category
         return $this;
     }
 
-    public function getPost(): ?Post
+    public function getPost(): Collection
     {
         return $this->post;
     }
 
-    public function setPost(?Post $post): static
+    public function addPost(Post $post): static
     {
-        $this->post = $post;
+        if (!$this->post->contains($post)) {
+            $this->post->add($post);
+            $post->setCategory($this);
+        }
 
         return $this;
     }
+
+    public function removePost(Post $post): static
+    {
+        if ($this->post->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getCategory() === $this) {
+                $post->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

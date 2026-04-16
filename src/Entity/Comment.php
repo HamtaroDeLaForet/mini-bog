@@ -20,14 +20,15 @@ class Comment
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'Comment')]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'Comment')]
     private ?Post $post = null;
+
+    #[ORM\Column]
+    private ?bool $isApprouved = null;
 
     public function getId(): ?int
     {
@@ -58,18 +59,6 @@ class Comment
         return $this;
     }
 
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -90,6 +79,18 @@ class Comment
     public function setPost(?Post $post): static
     {
         $this->post = $post;
+
+        return $this;
+    }
+
+    public function isApprouved(): ?bool
+    {
+        return $this->isApprouved;
+    }
+
+    public function setIsApprouved(bool $isApprouved): static
+    {
+        $this->isApprouved = $isApprouved;
 
         return $this;
     }

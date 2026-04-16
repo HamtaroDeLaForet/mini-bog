@@ -27,13 +27,13 @@
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">
-                            {# <a class="nav-link text-warning" href="{{ path('admin') }}">⚙ Admin</a> #}
+                            <a class="nav-link text-warning" href="{{ path('admin') }}">⚙ Admin</a>
                         </li>
                     {% endif %}
                     <li class="nav-item">
-                        {# <a class="nav-link" href="{{ path('app_profile') }}">
+                        <a class="nav-link" href="{{ path('app_profile') }}">
                             👤 {{ app.user.firstName }} {{ app.user.lastName }}
-                        </a> #}
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>

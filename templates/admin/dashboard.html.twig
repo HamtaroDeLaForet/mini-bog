@@ -1,0 +1,41 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block main %}
+    <div class="container mt-4">
+        <h1>Bienvenue sur le Dashboard Admin</h1>
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Articles</h5>
+                        <a href="{{ ea_url().setController('App\Controller\Admin\ArticleCrudController') }}" class="text-white">Gérer les articles</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Utilisateurs</h5>
+                        <a href="{{ ea_url().setController('App\Controller\Admin\UserCrudController') }}" class="text-white">Gérer les utilisateurs</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Commentaires</h5>
+                        <a href="{{ ea_url().setController('App\Controller\Admin\CommentCrudController') }}" class="text-white">Gérer les commentaires</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Catégories</h5>
+                        <a href="{{ ea_url().setController('App\Controller\Admin\CategoryCrudController') }}" class="text-white">Gérer les catégories</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

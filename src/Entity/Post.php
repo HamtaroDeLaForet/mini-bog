@@ -28,149 +28,70 @@ class Post
     #[ORM\Column(length: 255)]
     private ?string $picture = null;
 
-    #[ORM\ManyToOne(inversedBy: 'post')]
+    #[ORM\ManyToOne(inversedBy: 'posts')]
     private ?User $user = null;
 
-    /**
-     * @var Collection<int, Category>
-     */
-    #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'post')]
-    private Collection $Category;
+    // A post belongs to ONE category
+    #[ORM\ManyToOne(inversedBy: 'posts')]
+    private ?Category $category = null;
 
-    /**
-     * @var Collection<int, Comment>
-     */
+    // A post has MANY comments
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post')]
-    private Collection $Comment;
+    private Collection $comments;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
 
     public function __construct()
     {
-        $this->Category = new ArrayCollection();
-        $this->Comment = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->publishedAt = new \DateTimeImmutable();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
+    public function getTitle(): ?string { return $this->title; }
+    public function setTitle(string $title): static { $this->title = $title; return $this; }
 
-    public function setTitle(string $title): static
-    {
-        $this->title = $title;
+    public function getContent(): ?string { return $this->content; }
+    public function setContent(string $content): static { $this->content = $content; return $this; }
 
-        return $this;
-    }
+    public function getPublishedAt(): ?\DateTimeImmutable { return $this->publishedAt; }
+    public function setPublishedAt(\DateTimeImmutable $publishedAt): static { $this->publishedAt = $publishedAt; return $this; }
 
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
+    public function getPicture(): ?string { return $this->picture; }
+    public function setPicture(string $picture): static { $this->picture = $picture; return $this; }
 
-    public function setContent(string $content): static
-    {
-        $this->content = $content;
+    public function getUser(): ?User { return $this->user; }
+    public function setUser(?User $user): static { $this->user = $user; return $this; }
 
-        return $this;
-    }
+    public function getCategory(): ?Category { return $this->category; }
+    public function setCategory(?Category $category): static { $this->category = $category; return $this; }
 
-    public function getPublishedAt(): ?\DateTimeImmutable
-    {
-        return $this->publishedAt;
-    }
 
-    public function setPublishedAt(\DateTimeImmutable $publishedAt): static
-    {
-        $this->publishedAt = $publishedAt;
-
-        return $this;
-    }
-
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(string $picture): static
-    {
-        $this->picture = $picture;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Category>
-     */
-    public function getCategory(): Collection
-    {
-        return $this->Category;
-    }
-
-    public function addCategory(Category $category): static
-    {
-        if (!$this->Category->contains($category)) {
-            $this->Category->add($category);
-            $category->setPost($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): static
-    {
-        if ($this->Category->removeElement($category)) {
-            // set the owning side to null (unless already changed)
-            if ($category->getPost() === $this) {
-                $category->setPost(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComment(): Collection
-    {
-        return $this->Comment;
-    }
+    public function getComments(): Collection { return $this->comments; }
 
     public function addComment(Comment $comment): static
     {
-        if (!$this->Comment->contains($comment)) {
-            $this->Comment->add($comment);
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
             $comment->setPost($this);
         }
-
         return $this;
     }
 
     public function removeComment(Comment $comment): static
     {
-        if ($this->Comment->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
+        if ($this->comments->removeElement($comment)) {
             if ($comment->getPost() === $this) {
                 $comment->setPost(null);
             }
         }
-
         return $this;
     }
+
+    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static { $this->createdAt = $createdAt; return $this; }
 }

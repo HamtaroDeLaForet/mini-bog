@@ -3,7 +3,28 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1>Bienvenue sur le blog</h1>
-</div>
+    <div class="container mt-5">
+        <h1 class="mb-4">Derniers articles</h1>
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if post.picture %}
+                            <img src="{{ post.picture }}" class="card-img-top" alt="{{ post.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <p class="card-text text-muted">
+                                <small>{{ post.createdAt|date('d/m/Y') }} — {{ post.user.username }}</small>
+                            </p>
+                            <p class="card-text">{{ post.content|slice(0, 150) }}...</p>
+                            <a href="{{ path('app_post_show', {id: post.id}) }}" class="btn btn-primary">Lire la suite</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>Aucun article pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
