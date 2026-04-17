@@ -157,3 +157,9 @@ templates/
 ├── profile/
 └── security/
 ```
+
+## Login compte test 
+
+Admin : admin@admin.blog | adminblog
+User Test : lucas.martin@exemple.fr | User123.
+
