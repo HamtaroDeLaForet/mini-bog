@@ -9,7 +9,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;;
+use Symfony\Component\Routing\Attribute\Route;
+;
 
 class PostsController extends AbstractController
 {
@@ -43,7 +44,7 @@ class PostsController extends AbstractController
 
             $this->addFlash('success', 'Commentaire soumis, en attente de validation.');
 
-            return $this->redirectToRoute('app_article_show', ['id' => $post->getId()]);
+            return $this->redirectToRoute('app_post_show', ['id' => $post->getId()]);
         }
 
         // Seulement les commentaires approuvés
@@ -55,6 +56,15 @@ class PostsController extends AbstractController
             'post' => $post,
             'comments' => $approvedComments,
             'commentForm' => $form,
+        ]);
+    }
+    #[Route('/posts', name: 'app_posts_index')]
+    public function index(PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findAll();
+
+        return $this->render('posts/list.html.twig', [
+            'posts' => $posts,
         ]);
     }
 }

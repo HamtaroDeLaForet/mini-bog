@@ -1,34 +1,41 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Mini Blog{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
     {% block stylesheets %}{% endblock %}
     {% block javascripts %}
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
 </head>
+
 <body class="min-vh-100">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="{{ path('app_home') }}">🖊 Mini Blog</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ms-auto">
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ path('app_home') }}">🖊 Mini Blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_posts_index') }}">Articles</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     {% if is_granted('ROLE_ADMIN') %}
-                        <li class="nav-item">
-                            <a class="nav-link text-warning" href="{{ path('admin') }}">⚙ Admin</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-warning" href="{{ path('admin') }}">⚙ Admin</a>
+                    </li>
                     {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_profile') }}">
@@ -38,35 +45,36 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
                     </li>
-                {% else %}
+                    {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
                     </li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-</nav>
+                    {% endif %}
+                </ul>
 
-<main>
-    {% for flash in app.flashes('success') %}
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        {% for flash in app.flashes('success') %}
         <div class="alert alert-success alert-dismissible m-3">
             {{ flash }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-    {% endfor %}
-    {% for flash in app.flashes('error') %}
+        {% endfor %}
+        {% for flash in app.flashes('error') %}
         <div class="alert alert-danger alert-dismissible m-3">
             {{ flash }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-    {% endfor %}
+        {% endfor %}
 
-    {% block body %}{% endblock %}
-</main>
+        {% block body %}{% endblock %}
+    </main>
 </body>
+
 </html>
- 
