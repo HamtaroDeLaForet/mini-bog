@@ -35,7 +35,7 @@ class RegistrationController extends AbstractController
                 )
             );
             $user->setRoles(['ROLE_USER']);
-            $user->setIsActive(true);
+            $user->setIsActive(false);
             $user->setCreatedAt(new \DateTimeImmutable());
             $user->setUpdatedAt(new \DateTimeImmutable());
 
@@ -54,4 +54,3 @@ class RegistrationController extends AbstractController
         ]);
     }
 }
- 

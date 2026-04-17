@@ -25,6 +25,11 @@ class Category
     #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'category')]
     private Collection $post;
 
+    public function __construct()
+    {
+        $this->post = new ArrayCollection(); // ✅ Ajout du constructeur
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -72,7 +77,6 @@ class Category
     public function removePost(Post $post): static
     {
         if ($this->post->removeElement($post)) {
-            // set the owning side to null (unless already changed)
             if ($post->getCategory() === $this) {
                 $post->setCategory(null);
             }
@@ -85,5 +89,4 @@ class Category
     {
         return $this->name ?? '';
     }
-
 }

@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-;
 
 class PostsController extends AbstractController
 {
@@ -27,6 +26,9 @@ class PostsController extends AbstractController
             throw $this->createNotFoundException('Article introuvable');
         }
 
+        $referer = $request->query->get('referer', 'home');
+        $backRoute = $referer === 'list' ? 'app_posts_index' : 'app_home';
+
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
@@ -34,20 +36,32 @@ class PostsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+
+            if (!$user->isActive()) {
+                $this->addFlash('error', 'Votre compte est en attente de validation par un administrateur.');
+                return $this->redirectToRoute('app_post_show', ['id' => $post->getId(), 'referer' => $referer]);
+            }
+
             $comment->setPost($post);
-            $comment->setUser($this->getUser());
+            $comment->setUser($user);
             $comment->setCreatedAt(new \DateTimeImmutable());
-            $comment->setIsApprouved(false);
+            $comment->setIsApprouved($this->isGranted('ROLE_ADMIN'));
 
             $em->persist($comment);
             $em->flush();
 
-            $this->addFlash('success', 'Commentaire soumis, en attente de validation.');
+            $this->addFlash(
+                'success',
+                $this->isGranted('ROLE_ADMIN')
+                ? 'Commentaire publié.'
+                : 'Commentaire soumis, en attente de validation.'
+            );
 
-            return $this->redirectToRoute('app_post_show', ['id' => $post->getId()]);
+            return $this->redirectToRoute('app_post_show', ['id' => $post->getId(), 'referer' => $referer]);
         }
 
-        // Seulement les commentaires approuvés
         $approvedComments = $post->getComments()->filter(
             fn(Comment $c) => $c->isApprouved() === true
         );
@@ -56,12 +70,24 @@ class PostsController extends AbstractController
             'post' => $post,
             'comments' => $approvedComments,
             'commentForm' => $form,
+            'backRoute' => $backRoute, // ✅
         ]);
     }
+
+    #[Route('/', name: 'app_home')]
+    public function home(PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findBy([], ['createdAt' => 'DESC'], 3);
+
+        return $this->render('home/index.html.twig', [
+            'posts' => $posts,
+        ]);
+    }
+
     #[Route('/posts', name: 'app_posts_index')]
     public function index(PostRepository $postRepository): Response
     {
-        $posts = $postRepository->findAll();
+        $posts = $postRepository->findBy([], ['createdAt' => 'DESC']);
 
         return $this->render('posts/list.html.twig', [
             'posts' => $posts,

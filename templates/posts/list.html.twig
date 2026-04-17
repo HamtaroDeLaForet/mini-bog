@@ -12,7 +12,11 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100">
                 {% if post.picture %}
-                <img src="{{ post.picture }}" class="card-img-top" alt="{{ post.title }}">
+                {% if 'http' in post.picture %}
+                <img src="{{ post.picture }}" ...>
+                {% else %}
+                <img src="{{ '/uploads/posts/' ~ post.picture }}" ...>
+                {% endif %}
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ post.title }}</h5>
@@ -26,14 +30,15 @@
                     <p class="card-text">{{ post.content|slice(0, 150) }}...</p>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('app_post_show', {id: post.id}) }}" class="btn btn-primary btn-sm">
+                    <a href="{{ path('app_post_show', {id: post.id, referer: 'list'}) }}" class="btn btn-primary btn-sm"
+                        data-save-scroll>
                         Lire la suite
                     </a>
                 </div>
             </div>
         </div>
         {% else %}
-            <p>Aucun article pour le moment.</p>
+        <p>Aucun article pour le moment.</p>
         {% endfor %}
     </div>
 

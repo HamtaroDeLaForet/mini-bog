@@ -8,7 +8,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use Symfony\Component\Validator\Constraints\Image;
 
 class PostCrudController extends AbstractCrudController
 {
@@ -24,18 +25,21 @@ class PostCrudController extends AbstractCrudController
         $post->setUser($this->getUser());
         return $post;
     }
-    
+
     public function configureFields(string $pageName): iterable
     {
         return [
             TextField::new('title', 'Titre'),
-            TextareaField::new('content',"Contenu")->hideOnIndex(),
+            TextareaField::new('content', "Contenu")->hideOnIndex(),
             AssociationField::new('category', "Catégorie"),
             AssociationField::new('user', "Auteur"),
             DateTimeField::new('createdAt', "Créé le")->hideOnForm(),
             DateTimeField::new('publishedAt', "Publié le"),
-            TextField::new('picture', "Image")->hideOnIndex(),
+            ImageField::new('picture', 'Image')
+                ->setBasePath('/uploads/posts/')   // chemin public pour affichage
+                ->setUploadDir('public/uploads/posts') // dossier réel sur le serveur
+                ->setUploadedFileNamePattern('[randomhash].[extension]'),
+
         ];
     }
-    
 }

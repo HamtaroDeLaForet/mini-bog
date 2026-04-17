@@ -34,12 +34,24 @@
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
-                        <a class="nav-link text-warning" href="{{ path('admin') }}">⚙ Admin</a>
+                        <a class="nav-link d-flex align-items-center gap-1 text-warning" href="{{ path('admin') }}">
+                            ⚙ Admin
+                        </a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_profile') }}">
-                            👤 {{ app.user.firstName }} {{ app.user.lastName }}
+                        <a class="nav-link d-flex align-items-center gap-2" href="{{ path('app_profile') }}">
+                            {% if app.user.profilePicture %}
+                            <img src="{{ '/uploads/profiles/' ~ app.user.profilePicture }}"
+                                style="width: 32px; height: 32px; object-fit: cover; border-radius: 50%; border: 2px solid var(--primary);"
+                                alt="photo de profil">
+                            {% else %}
+                            <div
+                                style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.85rem;">
+                                {{ app.user.firstName|first|upper }}
+                            </div>
+                            {% endif %}
+                            {{ app.user.firstName }} {{ app.user.lastName }}
                         </a>
                     </li>
                     <li class="nav-item">
@@ -78,3 +90,25 @@
 </body>
 
 </html>
+
+<script>
+// Sauvegarde la position de scroll avant de quitter la page
+document.querySelectorAll('a[data-save-scroll]').forEach(link => {
+    link.addEventListener('click', () => {
+        sessionStorage.setItem('scrollPos', window.scrollY);
+        sessionStorage.setItem('scrollRoute', window.location.pathname);
+    });
+});
+
+// Restaure la position au chargement si on est sur la bonne page
+window.addEventListener('load', () => {
+    const scrollPos = sessionStorage.getItem('scrollPos');
+    const scrollRoute = sessionStorage.getItem('scrollRoute');
+
+    if (scrollPos && scrollRoute === window.location.pathname) {
+        window.scrollTo(0, parseInt(scrollPos));
+        sessionStorage.removeItem('scrollPos');
+        sessionStorage.removeItem('scrollRoute');
+    }
+});
+</script>
