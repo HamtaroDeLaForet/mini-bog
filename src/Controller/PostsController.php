@@ -85,12 +85,18 @@ class PostsController extends AbstractController
     }
 
     #[Route('/posts', name: 'app_posts_index')]
-    public function index(PostRepository $postRepository): Response
+    public function index(PostRepository $postRepository, Request $request): Response
     {
-        $posts = $postRepository->findBy([], ['createdAt' => 'DESC']);
+        $order = $request->query->get('order', 'DESC'); // DESC par défaut
+        if (!in_array($order, ['ASC', 'DESC'])) {
+            $order = 'DESC';
+        }
+
+        $posts = $postRepository->findBy([], ['createdAt' => $order]);
 
         return $this->render('posts/list.html.twig', [
             'posts' => $posts,
+            'order' => $order,
         ]);
     }
 }

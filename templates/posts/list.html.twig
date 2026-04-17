@@ -5,18 +5,30 @@
 {% block body %}
 <div class="container mt-5">
 
-    <h1 class="mb-4">Articles</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Articles</h1>
+        <div>
+            <a href="{{ path('app_posts_index', {order: 'DESC'}) }}"
+               class="btn btn-sm {{ order == 'DESC' ? 'btn-primary' : 'btn-outline-primary' }}">
+                Plus récents
+            </a>
+            <a href="{{ path('app_posts_index', {order: 'ASC'}) }}"
+               class="btn btn-sm {{ order == 'ASC' ? 'btn-primary' : 'btn-outline-primary' }}">
+                Plus anciens
+            </a>
+        </div>
+    </div>
 
     <div class="row">
         {% for post in posts %}
         <div class="col-md-4 mb-4">
             <div class="card h-100">
                 {% if post.picture %}
-                {% if 'http' in post.picture %}
-                <img src="{{ post.picture }}" ...>
-                {% else %}
-                <img src="{{ '/uploads/posts/' ~ post.picture }}" ...>
-                {% endif %}
+                    {% if 'http' in post.picture %}
+                        <img src="{{ post.picture }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ post.title }}">
+                    {% else %}
+                        <img src="{{ '/uploads/posts/' ~ post.picture }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ post.title }}">
+                    {% endif %}
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ post.title }}</h5>
@@ -30,15 +42,15 @@
                     <p class="card-text">{{ post.content|slice(0, 150) }}...</p>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ path('app_post_show', {id: post.id, referer: 'list'}) }}" class="btn btn-primary btn-sm"
-                        data-save-scroll>
+                    <a href="{{ path('app_post_show', {id: post.id, referer: 'list'}) }}"
+                       class="btn btn-primary btn-sm">
                         Lire la suite
                     </a>
                 </div>
             </div>
         </div>
         {% else %}
-        <p>Aucun article pour le moment.</p>
+            <p>Aucun article pour le moment.</p>
         {% endfor %}
     </div>
 

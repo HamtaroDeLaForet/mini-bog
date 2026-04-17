@@ -28,6 +28,8 @@ security:
                 target: app_home 
                 # where to redirect after logout
                 # target: app_any_route
+            access_denied_url: /access-denied  # ← ajoute ça
+
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
